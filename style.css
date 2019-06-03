@@ -1,0 +1,11 @@
+body {
+  text-align: center;
+}
+
+.tooltip-table {
+  width: 100%;
+}
+
+.tooltip-table .data {
+  text-align: right;
+}

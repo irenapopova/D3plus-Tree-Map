@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Free Web tutorials">
+  <meta name="keywords" content="HTML,CSS,JavaScript">
+  <meta name="author" content="Irena Popova">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://d3plus.org/js/d3.js"></script>
+  <script src="https://d3plus.org/js/d3plus.v2.0.0-alpha.17.full.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <title></title>
+</head>
+
+<body>
+  <h1 id="title">Movie Sales</h1>
+  <div id="viz"></div>
+  <script>
+    d3.json("https://cdn.rawgit.com/freeCodeCamp/testable-projects-fcc/a80ce8f9/src/data/tree_map/movie-data.json", function (error, json) {
+      if (error) return console.error(error);
+      make_viz(json);
+    });
+
+    function make_viz(json) {
+      const data = json.children.map((d) => d.children);
+      const dataMerged = [].concat(...data);
+      const reformattedData = dataMerged.map((d) => {
+        const rObj = {};
+        rObj.name = d.name;
+        rObj.category = d.category;
+        rObj.value = parseInt(d.value);
+        return rObj
+      });
+
+      new d3plus.Treemap()
+        .data(reformattedData)
+        .groupBy(["category", "name"])
+        .shapeConfig({
+          labelConfig: {
+            fontFamily: "sans-serif",
+            fontMax: 60
+          }
+        })
+        .tooltipConfig({
+          body: function (d) {
+            let table = "<table class='tooltip-table'>";
+            table += "<tr><td class='title'>Category:</td><td class='data'>" + d.category + "</td></tr>";
+            table += "<tr><td class='title'>Value:</td><td class='data'>" + d.value + "</td></tr>";
+            table += "</table>";
+            return table;
+          },
+          title: function (d) {
+            let txt = d.name;
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();;
+          }
+        })
+        .sum("value")
+        .render();
+    }
+
+
+
+
+
+
+  </script>
+</body>
+
+</html>
